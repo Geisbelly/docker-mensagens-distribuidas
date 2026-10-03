@@ -1,0 +1,52 @@
+services:
+  app1:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: app1
+    environment:
+      INSTANCE_NAME: app1
+      PEERS: app2,app3
+    ports:
+      - "5001:5000"
+    volumes:
+      - mensagens_data:/data
+    networks:
+      - rede_mensagens
+
+  app2:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: app2
+    environment:
+      INSTANCE_NAME: app2
+      PEERS: app1,app3
+    ports:
+      - "5002:5000"
+    volumes:
+      - mensagens_data:/data
+    networks:
+      - rede_mensagens
+
+  app3:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: app3
+    environment:
+      INSTANCE_NAME: app3
+      PEERS: app1,app2
+    ports:
+      - "5003:5000"
+    volumes:
+      - mensagens_data:/data
+    networks:
+      - rede_mensagens
+
+volumes:
+  mensagens_data:
+
+networks:
+  rede_mensagens:
+    driver: bridge
